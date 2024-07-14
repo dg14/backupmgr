@@ -14,48 +14,41 @@ import * as session from 'express-session';
 async function bootstrap() {
   config();
 
-
-  let level = 'info';
-  level = 'debug';
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-    /*
-    {
-      logger: WinstonModule.createLogger({
-        transports: [
-          new winston.transports.DailyRotateFile({
-            level: level,
-            filename: process.env.LOG_DIR + '/application-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: false,
-            maxFiles: '14d',
-          }),
-        ],
-        exceptionHandlers: [
-          new winston.transports.DailyRotateFile({
-            level: level,
-            filename: process.env.LOG_DIR + '/errors-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: false,
-            maxFiles: '14d',
-          }),
-        ],
-        rejectionHandlers: [
-          new winston.transports.DailyRotateFile({
-            level: level,
-            filename: process.env.LOG_DIR + '/errors-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: false,
-            maxFiles: '14d',
-          }),
-        ],
-        handleExceptions: true,
-        handleRejections: true,
-        // options (same as WinstonModule.forRoot() options)
-      }),
-    },
-    */
-  );
+  const level = process.env.LOG_LEVEL || 'info';
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: WinstonModule.createLogger({
+      transports: [
+        new winston.transports.DailyRotateFile({
+          level: level,
+          filename: process.env.LOG_DIR + '/application-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: false,
+          maxFiles: '14d',
+        }),
+      ],
+      exceptionHandlers: [
+        new winston.transports.DailyRotateFile({
+          level: level,
+          filename: process.env.LOG_DIR + '/errors-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: false,
+          maxFiles: '14d',
+        }),
+      ],
+      rejectionHandlers: [
+        new winston.transports.DailyRotateFile({
+          level: level,
+          filename: process.env.LOG_DIR + '/errors-%DATE%.log',
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: false,
+          maxFiles: '14d',
+        }),
+      ],
+      handleExceptions: true,
+      handleRejections: true,
+      // options (same as WinstonModule.forRoot() options)
+    }),
+  });
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   let engine = new Liquid({

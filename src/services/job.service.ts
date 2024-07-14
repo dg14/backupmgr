@@ -20,7 +20,6 @@ export class JobService {
       let j = await this.jobRepository.findOneBy({ id: body.id });
       if (j) {
         j.active = body.active && body.active == 'on' ? true : false;
-        console.log(j.active);
         j.cron = body.cron;
         j.name = body.name;
         j.script = body.script;

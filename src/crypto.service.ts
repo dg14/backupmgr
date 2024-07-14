@@ -44,9 +44,4 @@ export class CryptoService {
       'sha256',
     ).toString('hex');
   }
-  compareHash(data1: string, data2: string) {
-    console.log(data1);
-    console.log(data2);
-    return bcrypt.compareSync(data1, data2);
-  }
 }

@@ -46,7 +46,6 @@ export class JobinstanceController {
     let j = await this.jobinstanceRepository.findOne({
       where: { id: parseInt(req.params['id']) },
     });
-    console.log(j);
     return {
       jobinstance: j,
       DOCROOT: process.env.SUFFIX_URL,

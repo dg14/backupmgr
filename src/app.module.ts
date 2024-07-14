@@ -15,6 +15,8 @@ import { JobService } from './services/job.service';
 import { JobmanagerService } from './jobmanager.service';
 import { JSQLHelper } from './models/helpers/jsqlhelper';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { RestoreController } from './controllers/restore.controller';
+import { RestoreService } from './services/restore.service';
 
 @Module({
   imports: [
@@ -46,7 +48,12 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([User, Job, Jobinstance]),
   ],
-  controllers: [AppController, JobController, JobinstanceController],
+  controllers: [
+    AppController,
+    JobController,
+    JobinstanceController,
+    RestoreController,
+  ],
   providers: [
     AppService,
     AuthService,
@@ -54,6 +61,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     JobService,
     JobmanagerService,
     JSQLHelper,
+    RestoreService,
   ],
 })
 export class AppModule {}

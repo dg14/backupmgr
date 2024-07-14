@@ -1,0 +1,31 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<form>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th scope='col'>LogicalName</th>
+        <th scope='col'>PhysicalName</th>
+        <th scope='col'>Type</th>
+        <th scope='col'>FileGroupName</th>
+        <th scope='col'>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file in meta.files %}
+        <tr>
+          <td>{{ file.LogicalName }}</td>
+          <td>{{ file.PhysicalName }}</td>
+          <td>{{ file.Type }}</td>
+          <td>{{ file.FileGroupName }}</td>
+          <td>{{ file.Size }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/restores/list'>Back</a>
+  </div>
+</form>
+{% endblock %}

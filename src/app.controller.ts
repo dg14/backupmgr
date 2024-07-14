@@ -51,7 +51,6 @@ export class AppController {
     @Body() body,
   ): Promise<void> {
     let ret = await this.authService.validateLogin(body, session);
-    console.log(ret);
     if (ret.success) {
       session.logged = true;
       res.redirect(302, '/');

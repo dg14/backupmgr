@@ -59,7 +59,6 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
     let insta = await this.jobinstanceRepository.save(jobinstance);
     try {
       let out = this.jsqlHelper.run(job);
-      //let out = this.jsqlHelper.runWithConnection(job);
 
       insta.exit = 0;
       insta.end = new Date();
@@ -67,7 +66,6 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
       insta.log = out;
       await this.jobinstanceRepository.save(insta);
     } catch (e) {
-      console.log(e);
       this.logger.error(e.message, e.stack);
       insta.exit = 1;
       insta.end = new Date();
@@ -81,11 +79,6 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
   launchJob(job: Job) {
     let j = new CronJob(new Date(), () => this.processJob(job));
     j.start();
-  }
-
-  private launchCommand(command: string) {
-    // implement logic to launch the command
-    console.log(`Launching command: ${command}`);
   }
 
   check(arg0: any) {

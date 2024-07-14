@@ -1,0 +1,23 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>restore list</h3>
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope='col'>Name</th>
+      <th scope='col'>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in list %}
+      <tr>
+        <th scope='row'>
+          <a href='{{ DOCROOT }}/restores/details/{{item.file}}'>{{ item.file }}</a>
+        </th>
+        <td>{{ item.stats }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

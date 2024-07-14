@@ -19,7 +19,7 @@
       readonly
       class='form-control'
       id='end'
-      value='{{ jobinstance.end | date_to_rfc822}}'
+      value='{{ rest.end }}'
       aria-describedby='end'
     >
   </div>
@@ -30,13 +30,14 @@
       readonly
       class='form-control'
       id='status'
-      value='{{ jobinstance.status }}'
+      value='{{ rest.status }}'
       aria-describedby='status'
     >
   </div>
   <div class='mb-3'>
     <label for='script' class='form-label'>Log</label>
-    <textarea rows=15
+    <textarea
+      rows='15'
       class='form-control'
       readonly
       id='log'
