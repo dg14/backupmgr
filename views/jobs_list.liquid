@@ -1,0 +1,60 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>jobs list</h3>
+<script>
+  function restart() {
+    // Crea un oggetto XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+
+    // Imposta il metodo di richiesta e l'URL
+    xhr.open('GET', '{{ DOCROOT }}/jobs/restart');
+
+    // Gestisce la risposta della richiesta
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // La richiesta ha avuto successo
+        const contenuto = xhr.responseText;
+        // Aggiorna il contenuto della pagina con il contenuto ricevuto
+        document.getElementById('contenuto').innerHTML = contenuto;
+      } else {
+        // La richiesta è fallita
+        console.error('Errore durante il caricamento della pagina:', xhr.statusText);
+      }
+    };
+
+    // Invia la richiesta
+    xhr.send();
+  }
+</script>
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope='col'>#</th>
+      <th scope='col'>Name</th>
+      <th scope='col'>Active</th>
+      <th scope='col'>Cron</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for job in jobs %}
+      <tr>
+        <th scope='row'>
+          <a href='{{ DOCROOT }}/jobs/details/{{job.id}}'>{{ job.id }}</a>
+        </th>
+        <td>{{ job.name }}</td>
+        <td>{{ job.active }}</td>
+        <td>{{ job.cron }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  
+</table>
+
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a class="btn btn-primary" href="{{ DOCROOT }}/jobs/new">Add new</a>
+  <button type='submit' onclick='restart()' class='btn btn-primary'>Restart</button>
+</div>
+<div class="messages">
+  <span id="contenuto"></span>
+</div>
+{% endblock %}

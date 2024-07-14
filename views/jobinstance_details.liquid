@@ -1,0 +1,50 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<form>
+  <div class='mb-3'>
+    <label for='start' class='form-label'>start</label>
+    <input
+      type='text'
+      readonly
+      class='form-control'
+      id='start'
+      value='{{ jobinstance.start | date_to_rfc822 }}'
+      aria-describedby='start'
+    >
+  </div>
+  <div class='mb-3'>
+    <label for='end' class='form-label'>end</label>
+    <input
+      type='text'
+      readonly
+      class='form-control'
+      id='end'
+      value='{{ jobinstance.end | date_to_rfc822}}'
+      aria-describedby='end'
+    >
+  </div>
+  <div class='mb-3'>
+    <label for='status' class='form-label'>status</label>
+    <input
+      type='text'
+      readonly
+      class='form-control'
+      id='status'
+      value='{{ jobinstance.status }}'
+      aria-describedby='status'
+    >
+  </div>
+  <div class='mb-3'>
+    <label for='script' class='form-label'>Log</label>
+    <textarea rows=15
+      class='form-control'
+      readonly
+      id='log'
+    >{{ jobinstance.log }}</textarea>
+  </div>
+
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/jobinstances/list'>Back</a>
+  </div>
+</form>
+{% endblock %}
