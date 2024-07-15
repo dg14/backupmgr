@@ -62,6 +62,14 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
         j.start();
       }
     });
+    let sizeMonitor = new CronJob('0 0 23 * * *', async () => {
+      await this.jsqlHelper.fetchSizes();
+    });
+    this.schedulerRegistry.addCronJob(
+      'size_mon',
+      sizeMonitor,
+    );
+    sizeMonitor.start();
   }
   async processJob(job: Job) {
     this.logger.log('Starting job:' + job.name);
@@ -86,8 +94,9 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
       await this.jobinstanceRepository.save(insta);
     }
     await this.notifyUsers(insta);
-    job.lastRun = new Date();
-    this.jobRepository.save(job);
+    let j1 = await this.jobRepository.findOneBy({ id: job.id });
+    j1.lastRun = new Date();
+    this.jobRepository.save(j1);
     this.logger.log('job:' + job.name + ' done');
   }
   async notifyUsers(insta: Jobinstance) {

@@ -21,6 +21,7 @@ import { UserService } from './services/user.service';
 import { UserController } from './controllers/user.controller';
 import { ProfileController } from './controllers/profile.controller';
 import { EmailService } from './services/email.service';
+import { Sizemon } from './models/utils/sizemon.entity';
 
 @Module({
   imports: [
@@ -57,7 +58,7 @@ import { EmailService } from './services/email.service';
       },
     }),
     ScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([User, Job, Jobinstance]),
+    TypeOrmModule.forFeature([User, Job, Jobinstance, Sizemon]),
   ],
   controllers: [
     AppController,
