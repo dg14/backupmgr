@@ -36,7 +36,7 @@ $ pnpm run test:cov
 
 ## Support
 
-BackupMgr is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please visit [read more here](https://gitlab.com/dg14/backupmgr).
+BackupMgr is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please visit [read more here](https://github.com/dg14/backupmgr).
 
 
 BackupMgr is [MIT licensed](LICENSE).
