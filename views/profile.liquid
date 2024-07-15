@@ -1,0 +1,25 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<form method='post' action='{{  DOCROOT }}/profile/save' autocomplete='off'>
+  <div class='mb-3'>
+    <label for='password' class='form-label'>password</label>
+    <div class='row'>
+      <div class='col'>
+        <input type='password' class='form-control' autocomplete='off' name='pwd1string' placeholder='Password'>
+      </div>
+      <div class='col'>
+        <input
+          type='password'
+          class='form-control'
+          autocomplete='off'
+          name='pwd2string'
+          placeholder='Confirm password'
+        >
+      </div>
+    </div>
+  </div>  
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+  </div>
+</form>
+{% endblock %}

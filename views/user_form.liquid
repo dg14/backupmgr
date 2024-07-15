@@ -1,0 +1,74 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<form method='post' action='{{  DOCROOT }}/users/save' autocomplete='off'>
+  <div class='mb-3'>
+    <label for='login' class='form-label'>login</label>
+    <input
+      type='text'
+      name='login'
+      {% if user.id %}readonly{%  endif %}
+      class='form-control'
+      id='login'
+      value='{{ user.login }}'
+      aria-describedby='login'
+    >
+  </div>
+  <div class='mb-3'>
+    <input
+      type='checkbox'
+      class='form-check-input'
+      id='active'
+      name='active'
+      {% if user.active %}
+        checked
+      {% endif %}
+      aria-describedby='active'
+    >
+    <label for='active' class='form-check-label'>active</label>
+  </div>
+  <div class='mb-3'>
+    <label for='level' class='form-label'>level</label>
+    <select name='level' class='form-control'>
+      <option
+        value='1'
+        {% if user.level == 1 %}
+          selected
+        {% endif %}
+      >
+        Admin
+      </option>
+      <option
+        value='2'
+        {% if user.level == 2 %}
+          selected
+        {% endif %}
+      >
+        user
+      </option>
+    </select>
+  </div>
+  <div class='mb-3'>
+    <label for='password' class='form-label'>password</label>
+    <div class='row'>
+      <div class='col'>
+        <input type='password' class='form-control' autocomplete='off' name='pwd1string' placeholder='Password'>
+      </div>
+      <div class='col'>
+        <input
+          type='password'
+          class='form-control'
+          autocomplete='off'
+          name='pwd2string'
+          placeholder='Confirm password'
+        >
+      </div>
+    </div>
+  </div>
+  <input type='hidden' name='id' value='{{ user.id }}'>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+
+    <a class='btn btn-primary' href='{{ DOCROOT }}/users/list'>Back</a>
+  </div>
+</form>
+{% endblock %}

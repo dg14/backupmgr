@@ -6,15 +6,13 @@ import {
   Render,
   Req,
   Res,
-  Request,
-  Response,
   Session,
   UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './authguard.service';
-import * as session from 'express-session';
+import { Request, Response } from 'express';
 
 @Controller()
 export class AppController {
@@ -37,22 +35,24 @@ export class AppController {
   }
 
   @Get('logout')
-  logout(@Req() req, @Res() res) {
-    req.session.logged = false;
-    req.session.destroy();
+  logout(@Req() req: Request, @Res() res: Response) {
+    req.session['logged'] = false;
+    req.session.destroy(() => {});
     res.redirect(302, '/');
   }
 
   @Post('login')
   async login(
-    @Req() req,
-    @Res() res,
+    @Req() req: Request,
+    @Res() res: Response,
     @Session() session: Record<string, any>,
     @Body() body,
   ): Promise<void> {
     let ret = await this.authService.validateLogin(body, session);
     if (ret.success) {
-      session.logged = true;
+      session['uid'] = ret.uid;
+      session['level'] = ret.level;
+      session['logged'] = true;
       res.redirect(302, '/');
     } else {
       res.redirect(302, '/login');

@@ -17,6 +17,9 @@ import { JSQLHelper } from './models/helpers/jsqlhelper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RestoreController } from './controllers/restore.controller';
 import { RestoreService } from './services/restore.service';
+import { UserService } from './services/user.service';
+import { UserController } from './controllers/user.controller';
+import { ProfileController } from './controllers/profile.controller';
 
 @Module({
   imports: [
@@ -53,6 +56,8 @@ import { RestoreService } from './services/restore.service';
     JobController,
     JobinstanceController,
     RestoreController,
+    UserController,
+    ProfileController,
   ],
   providers: [
     AppService,
@@ -62,6 +67,7 @@ import { RestoreService } from './services/restore.service';
     JobmanagerService,
     JSQLHelper,
     RestoreService,
+    UserService,
   ],
 })
 export class AppModule {}

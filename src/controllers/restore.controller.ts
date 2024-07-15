@@ -1,10 +1,15 @@
 import { Controller, Get, Render, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { AppService } from 'src/app.service';
 import { AuthGuard } from 'src/authguard.service';
 import { RestoreService } from 'src/services/restore.service';
 
 @Controller('restores')
 export class RestoreController {
-  constructor(private restoreService: RestoreService) {}
+  constructor(
+    private restoreService: RestoreService,
+    private appService: AppService,
+  ) {}
 
   @Get('list')
   @UseGuards(AuthGuard)
@@ -12,18 +17,18 @@ export class RestoreController {
   async getallBacks() {
     return {
       list: this.restoreService.enum(),
-      DOCROOT: process.env.SUFFIX_URL,
+      DOCROOT: this.appService.getDocRoot(),
     };
   }
 
   @Get('details/:id')
   @UseGuards(AuthGuard)
   @Render('restore_details')
-  async getDetails(@Req() req) {
+  async getDetails(@Req() req: Request) {
     let meta = await this.restoreService.analyze(req.params['id']);
     return {
       meta: meta,
-      DOCROOT: process.env.SUFFIX_URL,
+      DOCROOT: this.appService.getDocRoot(),
     };
   }
 }

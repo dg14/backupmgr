@@ -8,6 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request, Response } from 'express';
+import { AppService } from 'src/app.service';
 import { AuthGuard } from 'src/authguard.service';
 import { JobmanagerService } from 'src/jobmanager.service';
 import { Job } from 'src/models/job/job';
@@ -20,6 +22,7 @@ export class JobController {
     @InjectRepository(Job) private jobRepository: Repository<Job>,
     private jobService: JobService,
     private jobManagerService: JobmanagerService,
+    private appService: AppService,
   ) {}
 
   @Get('list')
@@ -28,7 +31,7 @@ export class JobController {
   async getallJobs() {
     return {
       jobs: await this.jobRepository.find(),
-      DOCROOT: process.env.SUFFIX_URL,
+      DOCROOT: this.appService.getDocRoot(),
     };
   }
   @Get('new')
@@ -37,27 +40,27 @@ export class JobController {
   async createJob() {
     return {
       jobs: this.jobRepository.find(),
-      DOCROOT: process.env.SUFFIX_URL,
+      DOCROOT: this.appService.getDocRoot(),
     };
   }
   @Get('details/:id')
   @UseGuards(AuthGuard)
   @Render('jobs_form')
-  async modify_job(@Req() req) {
+  async modify_job(@Req() req: Request) {
     let j = await this.jobRepository.findOne({
       where: { id: parseInt(req.params['id']) },
     });
     return {
       job: j,
-      DOCROOT: process.env.SUFFIX_URL,
-      langtype: (j.type=='sql'?'sql':'bash')
+      DOCROOT: this.appService.getDocRoot(),
+      langtype: j.type == 'sql' ? 'sql' : 'bash',
     };
   }
   @Post('save')
   @UseGuards(AuthGuard)
-  async saveJob(@Req() req, @Res() res) {
+  async saveJob(@Req() req: Request, @Res() res: Response) {
     let j = await this.jobService.save(req.body);
-    res.redirect(302, '/jobs/details/' + j.id);
+    res.redirect(302, `${this.appService.getDocRoot()}/jobs/details/${j.id}`);
   }
   @Get('restart')
   @UseGuards(AuthGuard)
@@ -70,7 +73,7 @@ export class JobController {
   }
   @Get('check/:id')
   @UseGuards(AuthGuard)
-  async checkCron(@Req() req) {
+  async checkCron(@Req() req: Request) {
     return this.jobManagerService.check(req.params['id']);
   }
 }
