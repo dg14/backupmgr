@@ -25,4 +25,6 @@ export class Job {
 
   @Column({ default: 'sql' })
   type: string;
+  @Column({ default: false })
+  notifications: boolean;
 }

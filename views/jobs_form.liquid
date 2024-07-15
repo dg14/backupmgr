@@ -58,7 +58,19 @@
         checked
       {% endif %}
     >
-    <label class='form-check-label' for='active'>Check me out</label>
+    <label class='form-check-label' for='active'>Active</label>
+  </div>
+  <div class='mb-3 form-check'>
+    <input
+      type='checkbox'
+      class='form-check-input'
+      name='notifications'
+      id='notifications'
+      {% if job.notifications %}
+        checked
+      {% endif %}
+    >
+    <label class='form-check-label' for='notifications'>Notifications</label>
   </div>
   <input type='hidden' name='id' value='{{ job.id }}'>
 

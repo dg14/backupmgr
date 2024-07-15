@@ -10,8 +10,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request, Response } from 'express';
 import { AppService } from 'src/app.service';
-import { AuthGuard } from 'src/authguard.service';
-import { JobmanagerService } from 'src/jobmanager.service';
+import { AuthGuard } from '../services/authguard.service';
+import { JobmanagerService } from '../services/jobmanager.service';
 import { Job } from 'src/models/job/job';
 import { JobService } from 'src/services/job.service';
 import { Repository } from 'typeorm';
@@ -28,17 +28,19 @@ export class JobController {
   @Get('list')
   @UseGuards(AuthGuard)
   @Render('jobs_list')
-  async getallJobs() {
+  async getallJobs(@Req() req: Request) {
     return {
       jobs: await this.jobRepository.find(),
       DOCROOT: this.appService.getDocRoot(),
+      level: this.appService.getUserLevel(req),
     };
   }
   @Get('new')
   @UseGuards(AuthGuard)
   @Render('jobs_form')
-  async createJob() {
+  async createJob(@Req() req: Request) {
     return {
+      level: this.appService.getUserLevel(req),
       jobs: this.jobRepository.find(),
       DOCROOT: this.appService.getDocRoot(),
     };
@@ -52,6 +54,7 @@ export class JobController {
     });
     return {
       job: j,
+      level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
       langtype: j.type == 'sql' ? 'sql' : 'bash',
     };

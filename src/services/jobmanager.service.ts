@@ -5,12 +5,14 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Job } from './models/job/job';
+import { Job } from '../models/job/job';
 import { Repository } from 'typeorm';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { Jobinstance } from './models/jobinstance/jobinstance';
-import { JSQLHelper } from './models/helpers/jsqlhelper';
+import { Jobinstance } from '../models/jobinstance/jobinstance';
+import { JSQLHelper } from '../models/helpers/jsqlhelper';
+import { EmailService } from './email.service';
+import { User } from 'src/models/user/user';
 
 @Injectable()
 export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
@@ -21,6 +23,9 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
     private readonly jobRepository: Repository<Job>,
     @InjectRepository(Jobinstance)
     private readonly jobinstanceRepository: Repository<Jobinstance>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private emailService: EmailService,
     private readonly jsqlHelper: JSQLHelper,
     private schedulerRegistry: SchedulerRegistry,
   ) {}
@@ -45,13 +50,21 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
     jobs.forEach((job) => {
       if (job.active) {
         this.logger.log('Starting:' + job.name + ' at ' + job.cron);
-        let j = new CronJob(job.cron, () => this.processJob(job));
+        let j = new CronJob(job.cron, async () => {
+          this.logger.log('Start--');
+          try {
+            await this.processJob(job);
+          } catch (e) {
+            this.logger.error(e.message, e.stack);
+          }
+        });
         this.schedulerRegistry.addCronJob(job.id.toString(), j);
         j.start();
       }
     });
   }
   async processJob(job: Job) {
+    this.logger.log('Starting job:' + job.name);
     const jobinstance = new Jobinstance();
     jobinstance.job = job;
     jobinstance.status = 'running';
@@ -72,8 +85,18 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
       insta.status = 'error';
       await this.jobinstanceRepository.save(insta);
     }
+    await this.notifyUsers(insta);
     job.lastRun = new Date();
     this.jobRepository.save(job);
+    this.logger.log('job:' + job.name + ' done');
+  }
+  async notifyUsers(insta: Jobinstance) {
+    this.logger.log('Notifying users for job:' + insta.job.name + ' done');
+    let list = await this.userRepository.find();
+    for (let user of list) {
+      this.logger.log('TO:' + user.email);
+      this.emailService.sendJobNotification(user, insta);
+    }
   }
 
   launchJob(job: Job) {

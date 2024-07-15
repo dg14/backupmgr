@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './models/user/user';
+import { User } from '../models/user/user';
 import { Repository } from 'typeorm';
 import { CryptoService } from './crypto.service';
 

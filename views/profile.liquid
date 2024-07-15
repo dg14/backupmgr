@@ -1,5 +1,30 @@
 {% layout 'default-layout.liquid' %}
 {% block content %}
+<script>
+  function testNotifications() {
+    // Crea un oggetto XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+
+    // Imposta il metodo di richiesta e l'URL
+    xhr.open('GET', '{{ DOCROOT }}/users/testnotif/{{ user.id }}');
+
+    // Gestisce la risposta della richiesta
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // La richiesta ha avuto successo
+        const contenuto = xhr.responseText;
+        // Aggiorna il contenuto della pagina con il contenuto ricevuto
+        document.getElementById('contenuto').innerHTML = contenuto;
+      } else {
+        // La richiesta è fallita
+        console.error('Errore durante il caricamento della pagina:', xhr.statusText);
+      }
+    };
+
+    // Invia la richiesta
+    xhr.send();
+  }
+</script>
 <form method='post' action='{{  DOCROOT }}/profile/save' autocomplete='off'>
   <div class='mb-3'>
     <label for='password' class='form-label'>password</label>
@@ -17,9 +42,25 @@
         >
       </div>
     </div>
-  </div>  
+  </div>
+  <div class='mb-3'>
+    <input
+      type='checkbox'
+      class='form-check-input'
+      id='notifications'
+      name='notifications'
+      {% if user.notifications %}
+        checked
+      {% endif %}
+      aria-describedby='notifications'
+    >
+    <label for='notifications' class='form-check-label'>notifications</label>
+  </div>
   <div class='btn-group' role='group' aria-label='Basic example'>
     <button type='submit' class='btn btn-primary'>Submit</button>
+    {% if user.id %}
+      <button type='button' onclick='testNotifications()' class='btn btn-primary'>Test notifications</button>
+    {% endif %}
   </div>
 </form>
 {% endblock %}

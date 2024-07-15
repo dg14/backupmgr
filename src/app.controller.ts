@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AuthService } from './auth.service';
-import { AuthGuard } from './authguard.service';
+import { AuthService } from './services/auth.service';
+import { AuthGuard } from './services/authguard.service';
 import { Request, Response } from 'express';
 
 @Controller()
@@ -24,8 +24,16 @@ export class AppController {
   @Get()
   @UseGuards(AuthGuard)
   @Render('index')
-  root(@Res() res: Response, @Session() session: Record<string, any>) {
-    return { message: 'Hello world!', DOCROOT: process.env.SUFFIX_URL };
+  root(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Session() session: Record<string, any>,
+  ) {
+    return {
+      message: 'Hello world!',
+      DOCROOT: process.env.SUFFIX_URL,
+      level: this.appService.getUserLevel(req),
+    };
   }
 
   @Get('login')

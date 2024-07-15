@@ -9,10 +9,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Job } from './models/job/job';
 import { Jobinstance } from './models/jobinstance/jobinstance';
 import { User } from './models/user/user';
-import { AuthService } from './auth.service';
-import { CryptoService } from './crypto.service';
+import { AuthService } from './services/auth.service';
+import { CryptoService } from './services/crypto.service';
 import { JobService } from './services/job.service';
-import { JobmanagerService } from './jobmanager.service';
+import { JobmanagerService } from './services/jobmanager.service';
 import { JSQLHelper } from './models/helpers/jsqlhelper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { RestoreController } from './controllers/restore.controller';
@@ -20,6 +20,7 @@ import { RestoreService } from './services/restore.service';
 import { UserService } from './services/user.service';
 import { UserController } from './controllers/user.controller';
 import { ProfileController } from './controllers/profile.controller';
+import { EmailService } from './services/email.service';
 
 @Module({
   imports: [
@@ -42,9 +43,16 @@ import { ProfileController } from './controllers/profile.controller';
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
+        },
+        tls: {
+          // do not fail on invalid certs
+          rejectUnauthorized: process.env.EMAIL_TLS_IGNORECERT
+            ? process.env.EMAIL_TLS_IGNORECERT == 'false'
+            : true,
         },
       },
     }),
@@ -68,6 +76,7 @@ import { ProfileController } from './controllers/profile.controller';
     JSQLHelper,
     RestoreService,
     UserService,
+    EmailService,
   ],
 })
 export class AppModule {}

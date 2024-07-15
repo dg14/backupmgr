@@ -18,4 +18,9 @@ export class User {
   createdAt: Date;
   @Column()
   updatedAt: Date;
+  @Column({ default: false })
+  notifications: boolean;
+
+  @Column({ default: '' })
+  email: string;
 }

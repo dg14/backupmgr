@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AppService } from 'src/app.service';
-import { AuthGuard } from 'src/authguard.service';
+import { AuthGuard } from 'src/services/authguard.service';
 import { UserService } from 'src/services/user.service';
 
 @Controller('profile')
@@ -21,8 +21,13 @@ export class ProfileController {
   @Get()
   @UseGuards(AuthGuard)
   @Render('profile')
-  async getallBacks() {
+  async getProfile(@Req() req: Request) {
+    let u = await this.userService.findOne(parseInt(req.session['uid']));
     return {
+      user: {
+        notifications: u.notifications,
+      },
+      level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
     };
   }

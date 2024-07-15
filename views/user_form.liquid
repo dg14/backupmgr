@@ -1,12 +1,40 @@
 {% layout 'default-layout.liquid' %}
 {% block content %}
+<script>
+  function testNotifications() {
+    // Crea un oggetto XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+
+    // Imposta il metodo di richiesta e l'URL
+    xhr.open('GET', '{{ DOCROOT }}/users/testnotif/{{ user.id }}');
+
+    // Gestisce la risposta della richiesta
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // La richiesta ha avuto successo
+        const contenuto = xhr.responseText;
+        // Aggiorna il contenuto della pagina con il contenuto ricevuto
+        document.getElementById('contenuto').innerHTML = contenuto;
+      } else {
+        // La richiesta è fallita
+        console.error('Errore durante il caricamento della pagina:', xhr.statusText);
+      }
+    };
+
+    // Invia la richiesta
+    xhr.send();
+  }
+</script>
+
 <form method='post' action='{{  DOCROOT }}/users/save' autocomplete='off'>
   <div class='mb-3'>
     <label for='login' class='form-label'>login</label>
     <input
       type='text'
       name='login'
-      {% if user.id %}readonly{%  endif %}
+      {% if user.id %}
+        readonly
+      {% endif %}
       class='form-control'
       id='login'
       value='{{ user.login }}'
@@ -25,6 +53,30 @@
       aria-describedby='active'
     >
     <label for='active' class='form-check-label'>active</label>
+  </div>
+  <div class='mb-3'>
+    <input
+      type='checkbox'
+      class='form-check-input'
+      id='notifications'
+      name='notifications'
+      {% if user.notifications %}
+        checked
+      {% endif %}
+      aria-describedby='notifications'
+    >
+    <label for='notifications' class='form-check-label'>notifications</label>
+  </div>
+  <div class='mb-3'>
+    <label for='email' class='form-label'>email</label>
+    <input
+      type='text'
+      name='email'
+      class='form-control'
+      id='email'
+      value='{{ user.email }}'
+      aria-describedby='email'
+    >
   </div>
   <div class='mb-3'>
     <label for='level' class='form-label'>level</label>
@@ -67,8 +119,14 @@
   <input type='hidden' name='id' value='{{ user.id }}'>
   <div class='btn-group' role='group' aria-label='Basic example'>
     <button type='submit' class='btn btn-primary'>Submit</button>
+    {% if user.id %}
+      <button type='button' onclick='testNotifications()' class='btn btn-primary'>Test notifications</button>
+    {% endif %}
 
     <a class='btn btn-primary' href='{{ DOCROOT }}/users/list'>Back</a>
+  </div>
+  <div class='messages'>
+    <span id='contenuto'></span>
   </div>
 </form>
 {% endblock %}

@@ -28,7 +28,7 @@ async function bootstrap() {
       ],
       exceptionHandlers: [
         new winston.transports.DailyRotateFile({
-          level: level,
+          level: level,          
           filename: process.env.LOG_DIR + '/errors-%DATE%.log',
           datePattern: 'YYYY-MM-DD',
           zippedArchive: false,

@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../models/user/user';
 import { Repository } from 'typeorm';
-import { CryptoService } from '../crypto.service';
+import { CryptoService } from './crypto.service';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -66,10 +66,15 @@ export class UserService implements OnModuleInit {
     } else {
       u.active = false;
     }
+    if (body.notifications && body.notifications == 'on') {
+      u.notifications = true;
+    } else {
+      u.notifications = false;
+    }
     if (body.level) {
       u.level = body.level;
     }
-
+    u.email = body.email;
     let u1 = await this.userRepository.save(u);
     return u1;
   }
@@ -95,6 +100,7 @@ export class UserService implements OnModuleInit {
         active: u.active,
         updatedAt: u.updatedAt,
         createdAt: u.createdAt,
+        notifications: u.notifications,
       });
     }
     return ret;
@@ -112,6 +118,11 @@ export class UserService implements OnModuleInit {
       this.checkPasswordComplexity(body.pwd1string)
     ) {
       u.password = this.cryptoService.genHash(body.pwd1string);
+    }
+    if (body.notifications && body.notifications == 'on') {
+      u.notifications = true;
+    } else {
+      u.notifications = false;
     }
 
     let u1 = await this.userRepository.save(u);

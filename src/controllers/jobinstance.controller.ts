@@ -2,7 +2,7 @@ import { Controller, Get, Query, Render, Req, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { AppService } from 'src/app.service';
-import { AuthGuard } from 'src/authguard.service';
+import { AuthGuard } from 'src/services/authguard.service';
 import { Jobinstance } from 'src/models/jobinstance/jobinstance';
 import { Repository } from 'typeorm';
 
@@ -17,7 +17,7 @@ export class JobinstanceController {
   @Get('list')
   @UseGuards(AuthGuard)
   @Render('jobinstance_list')
-  async getallJobs(@Query('page') page: number = 1) {
+  async getallJobs(@Req() req: Request, @Query('page') page: number = 1) {
     let perPage = 20;
     if (!page) page = 1;
     let offset = (page - 1) * perPage;
@@ -33,6 +33,7 @@ export class JobinstanceController {
 
     return {
       jobinstances: data,
+      level: this.appService.getUserLevel(req),
       meta: {
         page: page,
         perPage: perPage,
@@ -51,6 +52,7 @@ export class JobinstanceController {
     });
     return {
       jobinstance: j,
+      level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
     };
   }
