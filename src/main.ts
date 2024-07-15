@@ -28,7 +28,7 @@ async function bootstrap() {
       ],
       exceptionHandlers: [
         new winston.transports.DailyRotateFile({
-          level: level,          
+          level: level,
           filename: process.env.LOG_DIR + '/errors-%DATE%.log',
           datePattern: 'YYYY-MM-DD',
           zippedArchive: false,
@@ -60,9 +60,14 @@ async function bootstrap() {
   app.setViewEngine('liquid');
   app.use(
     session({
-      secret: 'averylogphrasebiggerthanthirtytwochars',
+      secret: process.env.SESSION_SECRET,
       resave: true,
       saveUninitialized: false,
+      cookie: {
+        secure: process.env.SESSION_SECURE == 'true',
+        httpOnly: process.env.SESSION_SECURE == 'true',
+        maxAge: 5184000000,
+      },
     }),
   );
   if (process.env.SUFFIX_URL) app.setGlobalPrefix(process.env.SUFFIX_URL);
