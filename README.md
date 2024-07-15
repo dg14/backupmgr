@@ -17,7 +17,7 @@ The db where all is stored is directly in sql server (tested with a sql server 2
 
 Todo:
 - exploring db (all databases, sizes, system users and roles of each one, on each db and at system level).
-- eventualiy
+- eventualiy to split frontend and backend, and implement bossmq as scheduler.
 
 ## Installation
 
