@@ -1,7 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { AppService } from 'src/app.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor() {}
+  constructor(private readonly appService: AppService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -16,7 +17,7 @@ export class AuthGuard implements CanActivate {
       }
     } else {
       const response = context.switchToHttp().getResponse();
-      response.redirect(302, '/login');
+      response.redirect(302, this.appService.getDocRoot() + '/login');
       return false;
     }
   }

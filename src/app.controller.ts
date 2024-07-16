@@ -31,7 +31,7 @@ export class AppController {
   ) {
     return {
       message: 'Hello world!',
-      DOCROOT: process.env.SUFFIX_URL,
+      DOCROOT: this.appService.getDocRoot(),
       level: this.appService.getUserLevel(req),
     };
   }
@@ -39,14 +39,14 @@ export class AppController {
   @Get('login')
   @Render('login')
   loginView(@Res() res: Response, @Session() session: Record<string, any>) {
-    return { message: 'Hello world!', DOCROOT: process.env.SUFFIX_URL };
+    return { message: 'Hello world!', DOCROOT: this.appService.getDocRoot() };
   }
 
   @Get('logout')
   logout(@Req() req: Request, @Res() res: Response) {
     req.session['logged'] = false;
     req.session.destroy(() => {});
-    res.redirect(302, '/');
+    res.redirect(302, this.appService.getDocRoot() + '/');
   }
 
   @Post('login')
@@ -61,9 +61,9 @@ export class AppController {
       session['uid'] = ret.uid;
       session['level'] = ret.level;
       session['logged'] = true;
-      res.redirect(302, '/');
+      res.redirect(302, this.appService.getDocRoot() + '/');
     } else {
-      res.redirect(302, '/login');
+      res.redirect(302, this.appService.getDocRoot() + '/login');
     }
   }
 }

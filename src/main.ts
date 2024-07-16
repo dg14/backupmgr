@@ -49,7 +49,9 @@ async function bootstrap() {
       // options (same as WinstonModule.forRoot() options)
     }),
   });
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: process.env.SUFFIX_URL == '' ? '/' : process.env.SUFFIX_URL,
+  });
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   let engine = new Liquid({
     extname: '.liquid',
