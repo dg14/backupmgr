@@ -22,6 +22,7 @@ import { UserController } from './controllers/user.controller';
 import { ProfileController } from './controllers/profile.controller';
 import { EmailService } from './services/email.service';
 import { Sizemon } from './models/utils/sizemon.entity';
+import { SizesController } from './controllers/sizes.controller';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { Sizemon } from './models/utils/sizemon.entity';
     RestoreController,
     UserController,
     ProfileController,
+    SizesController,
   ],
   providers: [
     AppService,

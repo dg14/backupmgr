@@ -1,0 +1,56 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>DB Size of {{ database }}</h3>
+<div style='width: 100%;'><canvas id='acquisitions'></canvas></div>
+
+<script src='{{  DOCROOT }}/js/chart.umd.min.js'></script>
+<script>
+  const data = {{ sizes | json }};
+
+  new Chart(document.getElementById('acquisitions'), {
+    type: 'line',
+    data: {
+      labels: data.map((row) => new Date(row.date)),
+      datasets: [
+        {
+          label: 'Total size mb',
+          data: data.map((row) => row.total_size_mb),
+        },
+        {
+          label: 'log_size_mb',
+          data: data.map((row) => row.log_size_mb),
+        },
+        {
+          label: 'row_size_mb',
+          data: data.map((row) => row.row_size_mb),
+        },
+      ],
+    },
+  });
+</script>
+
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope='col'>Date</th>
+      <th scope='col'>row_size_mb</th>
+      <th scope='col'>log_size_mb</th>
+      <th scope='col'>total_size_mb</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for db in sizes %}
+      <tr>
+        <td>{{ db.date }}</td>
+        <td>{{ db.row_size_mb }}</td>
+        <td>{{ db.log_size_mb }}</td>
+        <td>{{ db.total_size_mb }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class='btn-group' role='group' aria-label='Basic example'>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/dbsizes/'>Back</a>
+</div>
+{% endblock %}

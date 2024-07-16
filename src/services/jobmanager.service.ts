@@ -62,7 +62,7 @@ export class JobmanagerService implements OnModuleInit, OnModuleDestroy {
         j.start();
       }
     });
-    let sizeMonitor = new CronJob('0 0 23 * * *', async () => {
+    let sizeMonitor = new CronJob('0 27 20 * * *', async () => {
       await this.jsqlHelper.fetchSizes();
     });
     this.schedulerRegistry.addCronJob(
