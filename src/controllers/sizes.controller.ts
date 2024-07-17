@@ -19,7 +19,14 @@ export class SizesController {
   @Render('dbs_list')
   async getDbs(@Req() req: Request) {
     let dbs = await this.entityManager.query(
-      'SELECT name FROM master.sys.databases',
+      `      SELECT 
+	CAST( GETDATE() AS Date ) as date,
+      database_name = DB_NAME(database_id)
+    , log_size_mb = CAST(SUM(CASE WHEN type_desc = 'LOG' THEN size END) * 8. / 1024 AS DECIMAL(8,2))
+    , row_size_mb = CAST(SUM(CASE WHEN type_desc = 'ROWS' THEN size END) * 8. / 1024 AS DECIMAL(8,2))
+    , total_size_mb = CAST(SUM(size) * 8. / 1024 AS DECIMAL(8,2))
+FROM sys.master_files WITH(NOWAIT)
+GROUP BY database_id`,
     );
     return {
       dbs: dbs,

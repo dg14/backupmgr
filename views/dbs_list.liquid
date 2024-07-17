@@ -6,14 +6,20 @@
   <thead>
     <tr>
       <th scope='col'>DB</th>
+      <th scope='col'>Log Size (MB)</th>
+      <th scope='col'>Row Size (MB)</th>
+      <th scope='col'>Total Size (MB)</th>
     </tr>
   </thead>
   <tbody>
     {% for db in dbs %}
       <tr>
         <th scope='row'>
-          <a href='{{ DOCROOT }}/dbsizes/size/{{db.name}}'>{{ db.name }}</a>
+          <a href='{{ DOCROOT }}/dbsizes/size/{{db.database_name}}'>{{ db.database_name }}</a>
         </th>
+        <td>{{ db.log_size_mb }}</td>
+        <td>{{ db.row_size_mb }}</td>
+        <td>{{ db.total_size_mb }}</td>
       </tr>
     {% endfor %}
   </tbody>

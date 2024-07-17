@@ -23,6 +23,7 @@ import { ProfileController } from './controllers/profile.controller';
 import { EmailService } from './services/email.service';
 import { Sizemon } from './models/utils/sizemon.entity';
 import { SizesController } from './controllers/sizes.controller';
+import { SecurityExplorerController } from './controllers/secexp.controller';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { SizesController } from './controllers/sizes.controller';
     UserController,
     ProfileController,
     SizesController,
+    SecurityExplorerController,
   ],
   providers: [
     AppService,
