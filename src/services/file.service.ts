@@ -21,6 +21,10 @@ export class FileService {
     writeFileSync(root + '/' + file.originalname, file.buffer);
   }
   moveToRestore(id: string) {
+    if (!id) {
+      throw new Error('File null');
+    }
+    id = id.replaceAll('/', '');    
     let root = process.env.FS_UPLOAD_DIR;
     let filePath = realpathSync(resolve(root, id));
     if (!filePath.startsWith(root)) {
