@@ -1,0 +1,39 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>File manager</h3>
+
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope='col'>File</th>
+      <th scope='col'>Created at</th>
+      <th scope='col'>Modified at</th>
+      <th scope='col'>Size</th>
+      <th scope='col'>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in files %}
+      <tr>
+        <th scope='row'>
+          {{ file.file }}          
+        </th>
+        <td>
+            {{ file.createdAt }}
+        </td>
+        <td>
+            {{ file.modifiedAt }}
+        </td>
+        <td>
+            {{ file.size }}
+        </td>
+        <td><a href='{{ DOCROOT }}/fileman/delete/{{file.file}}'>Remove</a> | <a href='{{ DOCROOT }}/fileman/moverestore/{{file.file}}'>To Restore</a></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="btn-group" role="group" aria-label="Basic example">
+  <a class="btn btn-primary" href="{{ DOCROOT }}/fileman/files">Add new</a>
+</div>
+
+{% endblock %}

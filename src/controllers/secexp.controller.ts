@@ -1,24 +1,40 @@
 import { Controller, Get, Render, Req, UseGuards } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { AppService } from 'src/app.service';
-import { Sizemon } from 'src/models/utils/sizemon.entity';
 import { AuthGuard } from 'src/services/authguard.service';
 import { EntityManager, Repository } from 'typeorm';
 
 @Controller('secexp')
 export class SecurityExplorerController {
-  constructor(
-    private entityManager: EntityManager,
-    private readonly appService: AppService,
-  ) {}
+	constructor(
+		private entityManager: EntityManager,
+		private readonly appService: AppService,
+	) { }
 
-  @Get()
-  @UseGuards(AuthGuard)
-  @Render('secexp_index')
-  async index(@Req() req: Request) {
-    // https://gist.github.com/jzabroski/ec7731e3bdd0ee219108457de328797c
-    let query=`DECLARE @HideDatabaseDiagrams BIT = 1;
+	@Get()
+	@UseGuards(AuthGuard)
+	@Render('secexp_list')
+	async getDbs(@Req() req: Request) {
+		let dbs = await this.entityManager.query(
+			`      SELECT 
+		database_name = DB_NAME(database_id)
+  FROM sys.databases WITH(NOWAIT)`
+		);
+		return {
+			dbs: dbs,
+			level: this.appService.getUserLevel(req),
+			DOCROOT: this.appService.getDocRoot(),
+		};
+	}
+
+
+	@Get('details/:name')
+	@UseGuards(AuthGuard)
+	@Render('secexp_details')
+	async index(@Req() req: Request) {
+		let db = req.params["name"];
+		// https://gist.github.com/jzabroski/ec7731e3bdd0ee219108457de328797c
+		let query = `use ${db}; DECLARE @HideDatabaseDiagrams BIT = 1;
 
 --List all access provisioned to a sql user or windows user/group directly 
 SELECT  
@@ -251,10 +267,11 @@ ORDER BY
     perm.[state_desc],
     obj.type_desc--perm.[class_desc]`;
 
-    return {
-      items: this.entityManager.query(query),
-      level: this.appService.getUserLevel(req),
-      DOCROOT: this.appService.getDocRoot(),
-    };
-  }
+		return {
+			db: db,
+			items: this.entityManager.query(query),
+			level: this.appService.getUserLevel(req),
+			DOCROOT: this.appService.getDocRoot(),
+		};
+	}
 }

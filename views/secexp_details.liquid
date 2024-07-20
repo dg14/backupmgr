@@ -1,0 +1,89 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Security details</h3>
+<b>Database: <b>{{ db }}</b> </p>
+<table class='table'>
+  <thead>
+    <th scope='col'>UserName</th>
+    <th scope='col'>UserType</th>
+    <th scope='col'>PrincipalUserName</th>
+    <th scope='col'>PrincipalType</th>
+    <th scope='col'>DatabaseUserName</th>
+    <th scope='col'>Role</th>
+    <th scope='col'>PermissionType</th>
+    <th scope='col'>PermissionState</th>
+    <!--
+    <th scope='col'>ObjectType</th>
+    <th scope='col'>ObjectName</th>
+    <th scope='col'>ColumnName</th>
+    -->
+  </thead>
+  <tbody>
+    {% for item in items %}
+      <tr>
+        <td scope='row'>{{ item.UserName }}</td>
+        <td>{{ item.UserType }}</td>
+        <td>{{ item.PrincipalUserName }}</td>
+        <td>{{ item.PrincipalType }}</td>
+        <td>{{ item.DatabaseUserName }}</td>
+        <td>{{ item.Role }}</td>
+        <td>{{ item.PermissionType }}</td>
+        <td>{{ item.PermissionState }}</td>
+        <!--
+        <td>{{ item.ObjectType }}</td>
+        <td>{{ item.ObjectName }}</td>
+        <td>{{ item.ColumnName }}</td>
+      -->
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class='btn-group' role='group' aria-label='Basic example'>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secexp'>Back</a>
+</div>
+
+<hr/>
+<ul>
+  <li><b>UserName</b>: SQL or Windows/Active Directory user account. This could also be an Active Directory group.</li>
+  <li>
+    <b>UserType</b>: Value will be either 'SQL User' or 'Windows User'. This reflects the type of user defined for the
+    SQL Server user account.
+  </li>
+  <li><b>PrincipalUserName</b>: if UserName is not blank, then UserName else DatabaseUserName</li>
+  <li><b>PrincipalType</b>: Possible values are 'SQL User', 'Windows User', 'Database Role', 'Windows Group'</li>
+  <li>
+    <b>DatabaseUserName</b>: Name of the associated user as defined in the database user account. The database user may
+    not be the same as the server user.
+  </li>
+  <li>
+    <b>Role</b>: The role name. This will be null if the associated permissions to the object are defined at directly on
+    the user account, otherwise this will be the name of the role that the user is a member of.
+  </li>
+  <li>
+    <b>PermissionType</b>: Type of permissions the user/role has on an object. Examples could include CONNECT, EXECUTE,
+    SELECT DELETE, INSERT, ALTER, CONTROL, TAKE OWNERSHIP, VIEW DEFINITION, etc. This value may not be populated for all
+    roles. Some built in roles have implicit permission definitions.
+  </li>
+  <li>
+    <b>PermissionState</b>: Reflects the state of the permission type, examples could include GRANT, DENY, etc.This
+    value may not be populated for all roles. Some built in roles have implicit permission definitions.
+  </li>
+  <!--
+  <li>
+    <b>ObjectType</b>: Type of object the user/role is assigned permissions on. Examples could include USER_TABLE,
+    SQL_SCALAR_FUNCTION, SQL_INLINE_TABLE_VALUED_FUNCTION, SQL_STORED_PROCEDURE, VIEW, etc. This value may not be
+    populated for all roles. Some built in roles have implicit permission definitions.
+  </li>
+  <li>
+    <b>ObjectName</b>: Name of the object that the user/role is assigned permissions on. This value may not be populated
+    for all roles. Some built in roles have implicit permission definitions.
+  </li>
+  <li>
+    <b>ColumnName</b>: Name of the column of the object that the user/role is assigned permissions on. This value is
+    only populated if the object is a table, view or a table value function.
+  </li>
+-->
+</ul>
+
+{% endblock %}

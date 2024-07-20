@@ -1,0 +1,22 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Restore database</h3>
+<b>File: <b>{{ file}}</b></p>
+<form method='post' action='{{ DOCROOT }}/restores/restore/{{ file }}'>
+  <div class='mb-3'>
+    <label for='name' class='form-label'>Name</label>
+    <input type='text' class='form-control' id='name' name='name' value='{{ name }}' aria-describedby='name'>
+    <div id='name' class='form-text'>We'll never share your email with anyone else.</div>
+  </div>
+  <div class='mb-3'>
+    <label for='type' class='form-label'>type</label>
+    <textarea rows=20 readonly class="form-control">{{ results }}</textarea>
+
+  </div>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/restores/list'>Back</a>
+  </div>
+</form>
+
+{% endblock %}

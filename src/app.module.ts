@@ -24,6 +24,9 @@ import { EmailService } from './services/email.service';
 import { Sizemon } from './models/utils/sizemon.entity';
 import { SizesController } from './controllers/sizes.controller';
 import { SecurityExplorerController } from './controllers/secexp.controller';
+import { FilemanController } from './controllers/fileman.controller';
+import { FileService } from './services/file.service';
+import { FileSizeGuard } from './models/helpers/fsize.guard';
 
 @Module({
   imports: [
@@ -71,6 +74,7 @@ import { SecurityExplorerController } from './controllers/secexp.controller';
     ProfileController,
     SizesController,
     SecurityExplorerController,
+    FilemanController
   ],
   providers: [
     AppService,
@@ -82,6 +86,7 @@ import { SecurityExplorerController } from './controllers/secexp.controller';
     RestoreService,
     UserService,
     EmailService,
+    FileService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

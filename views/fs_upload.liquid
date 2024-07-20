@@ -1,0 +1,29 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>File upload</h3>
+<form method='post' action='{{  DOCROOT }}/fileman/files' autocomplete='off' enctype="multipart/form-data">
+  <div class='mb-3'>
+    <label for='login' class='form-label'>login</label>
+    <input
+      type='text'
+      name='login'
+      {% if user.id %}
+        readonly
+      {% endif %}
+      class='form-control'
+      id='login'
+      value='{{ user.login }}'
+      aria-describedby='login'
+    >
+  </div>
+  <div class='mb-3'>
+    <label for='file' class='form-label'>password</label>
+    <input type='file' class='form-control' name="file" >
+  </div>
+  <input type='hidden' name='file' value='{{ file.name }}'>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/fileman/list'>Back</a>
+  </div>
+</form>
+{% endblock %}

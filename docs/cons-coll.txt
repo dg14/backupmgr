@@ -1,0 +1,1 @@
+for f in accrediti bacheca centronotifiche adcopy compleanni extrldap portaunamico wp; do ./backupgen.sh $f f:\\backups-19072024\\ ; done

@@ -1,20 +1,18 @@
 {% layout 'default-layout.liquid' %}
 {% block content %}
-<h3>Restore databases</h3>
+<h3>Security details</h3>
 <table class='table'>
   <thead>
     <tr>
-      <th scope='col'>Name</th>
-      <th scope='col'>Date</th>
+      <th scope='col'>DB</th>
     </tr>
   </thead>
   <tbody>
-    {% for item in list %}
+    {% for db in dbs %}
       <tr>
         <th scope='row'>
-          <a href='{{ DOCROOT }}/restores/details/{{item.file}}'>{{ item.file }}</a>
+          <a href='{{ DOCROOT }}/secexp/details/{{db.database_name}}'>{{ db.database_name }}</a>
         </th>
-        <td>{{ item.stats }}</td>
       </tr>
     {% endfor %}
   </tbody>

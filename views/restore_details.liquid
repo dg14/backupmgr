@@ -1,5 +1,7 @@
 {% layout 'default-layout.liquid' %}
 {% block content %}
+<h3>Backup details</h3>
+<p>File: <b>{{file }}</b></p>
 <form>
   <table class='table'>
     <thead>
@@ -26,6 +28,7 @@
 
   <div class='btn-group' role='group' aria-label='Basic example'>
     <a class='btn btn-primary' href='{{ DOCROOT }}/restores/list'>Back</a>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/restores/restore/{{ file }}'>Restore</a>
   </div>
 </form>
 {% endblock %}

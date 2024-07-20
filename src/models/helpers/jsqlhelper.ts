@@ -29,7 +29,7 @@ export class JSQLHelper {
         );
         writeFileSync(nomeScript, contenutoScript);
         const output = execSync(
-          `${process.env.TOOLS}/sqlcmd -i ${nomeScript}`,
+          `${process.env.TOOLS}/sqlcmd -C -i ${nomeScript}`,
           {
             env: {
               SQLCMDUSER: process.env.DB_USERNAME,
