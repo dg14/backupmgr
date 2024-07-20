@@ -38,9 +38,6 @@ dependencies:
   express-session:
     specifier: ^1.18.0
     version: 1.18.0
-  get-git-version:
-    specifier: ^0.5.4
-    version: 0.5.4
   liquidjs:
     specifier: ^10.15.0
     version: 10.15.0
@@ -2780,6 +2777,7 @@ packages:
     engines: {node: '>= 6'}
     requiresBuild: true
     dev: false
+    optional: true
 
   /comment-json@4.2.3:
     resolution: {integrity: sha512-SsxdiOf064DWoZLH799Ata6u7iV658A11PlWtZATDlXPpKGJnbJZ5Z24ybixAi+LUUqJ/GKowAejtC5GFUG7Tw==}
@@ -3876,14 +3874,6 @@ packages:
   /get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
     engines: {node: 6.* || 8.* || >= 10.*}
-
-  /get-git-version@0.5.4:
-    resolution: {integrity: sha512-YPonQPV+KS0l7G4hd0BPrSguF5QafKOwFSLIa8wcKYIXk/iq0lgx0SZbmhAUvsl2OChf4//4YYc9gZuyrv6xZg==}
-    engines: {node: '>= 8.3.0'}
-    hasBin: true
-    dependencies:
-      commander: 6.2.1
-    dev: false
 
   /get-intrinsic@1.2.4:
     resolution: {integrity: sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==}
