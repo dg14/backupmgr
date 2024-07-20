@@ -1,0 +1,43 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Adduser</h3>
+<form method='post' action='{{ DOCROOT }}/secman/db/{{ database }}/user/add'>
+  <div class='mb-3'>
+    <label for='user' class='form-label'>user</label>
+    <select name='user' class='form-control'>
+      {% for u in users %}
+        <option
+          {% if u.name == user %}
+            selected
+          {% endif %}
+          value='{{ u.name }}'
+        >
+          {{ u.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class='mb-3'>
+    <label for='database' class='form-label'>database</label>
+    <input
+      type='text'
+      class='form-control'
+      id='database'
+      name='database'
+      readonly
+      value='{{ database }}'
+      aria-describedby='database'
+    >
+  </div>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ database }}'>Back</a>
+  </div>
+  {% if error %}
+    <div class='alert alert-danger' role='alert'>
+      {{ message }}
+    </div>
+  {% endif %}
+</form>
+
+{% endblock %}

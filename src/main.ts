@@ -17,6 +17,7 @@ async function bootstrap() {
   const level = process.env.LOG_LEVEL || 'info';
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: WinstonModule.createLogger({
+      format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
       transports: [
         new winston.transports.DailyRotateFile({
           level: level,

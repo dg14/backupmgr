@@ -27,6 +27,8 @@ import { SecurityExplorerController } from './controllers/secexp.controller';
 import { FilemanController } from './controllers/fileman.controller';
 import { FileService } from './services/file.service';
 import { FileSizeGuard } from './models/helpers/fsize.guard';
+import { MssqlService } from './services/mssql.service';
+import { SecurityManagerController } from './controllers/secmgr.controller';
 
 @Module({
   imports: [
@@ -74,7 +76,8 @@ import { FileSizeGuard } from './models/helpers/fsize.guard';
     ProfileController,
     SizesController,
     SecurityExplorerController,
-    FilemanController
+    SecurityManagerController,
+    FilemanController,
   ],
   providers: [
     AppService,
@@ -87,6 +90,7 @@ import { FileSizeGuard } from './models/helpers/fsize.guard';
     UserService,
     EmailService,
     FileService,
+    MssqlService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

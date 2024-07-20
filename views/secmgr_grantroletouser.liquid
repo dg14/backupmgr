@@ -1,0 +1,55 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Adduser</h3>
+<form method='post' action='{{ DOCROOT }}/secman/db/{{ database }}/user/{{ user}}/addrole'>
+  <div class='mb-3'>    
+    <label for='role' class='form-label'>role</label>
+    <select name='role' class='form-control'>
+      {% for r in roles %}
+        <option
+          {% if r.RoleName == role %}
+            selected
+          {% endif %}
+          value='{{ r.RoleName }}'
+        >
+          {{ r.RoleName }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class='mb-3'>
+    <label for='database' class='form-label'>database</label>
+    <input
+      type='text'
+      class='form-control'
+      id='database'
+      name='database'
+      readonly
+      value='{{ database }}'
+      aria-describedby='database'
+    >
+  </div>
+  <div class='mb-3'>
+    <label for='user' class='form-label'>user</label>
+    <input
+      type='text'
+      class='form-control'
+      id='user'
+      name='user'
+      readonly
+      value='{{ user }}'
+      aria-describedby='user'
+    >
+  </div>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ database }}/user/{{  user }}'>Back</a>
+  </div>
+  {% if error %}
+    <div class='alert alert-danger' role='alert'>
+      {{ message }}
+    </div>
+  {% endif %}
+</form>
+
+{% endblock %}

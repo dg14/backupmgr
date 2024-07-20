@@ -12,7 +12,7 @@
     {% for db in dbs %}
       <tr>
         <th scope='row'>
-          <a href='{{ DOCROOT }}/secexp/details/{{db.database_name}}'>{{ db.database_name }}</a>
+          <a href='{{ DOCROOT }}/secman/db/{{db.database_name}}'>{{ db.database_name }}</a>
         </th>
       </tr>
     {% endfor %}
@@ -34,7 +34,7 @@
     {% for user in users %}
       <tr>
         <th scope='row'>
-          <a href='{{ DOCROOT }}/secexp/detailsuser/{{user.name}}'>{{ user.name }}</a>
+          <a href='{{ DOCROOT }}/secman/user/{{user.name}}'>{{ user.name }}</a>
         </th>
         <td>{{ user.type }}</td>
         <td>{{ user.type_desc }}</td>
@@ -44,6 +44,9 @@
     {% endfor %}
   </tbody>
 </table>
+<div class='btn-group' role='group' aria-label='Basic example'>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/user/add'>Add new</a>
+</div>
 <h4>Roles</h4>
 
 <table class='table'>

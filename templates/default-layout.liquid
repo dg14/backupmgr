@@ -40,7 +40,11 @@
               <a class='nav-link active' aria-current='page' href='{{ DOCROOT }}/dbsizes'>DB Sizes</a>
             </li>
             <li class='nav-item'>
+              {% if level == 2 %}
               <a class='nav-link active' aria-current='page' href='{{ DOCROOT }}/secexp'>Security Explorer</a>
+              {%  elsif level== 1 %}
+              <a class='nav-link active' aria-current='page' href='{{ DOCROOT }}/secman'>Security Manager</a>
+              {% endif %}
             </li>
             <li class='nav-item'>
               <a class='nav-link active' aria-current='page' href='{{ DOCROOT }}/fileman'>File Manager</a>

@@ -1,0 +1,37 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Adduser</h3>
+<form method='post' action='{{ DOCROOT }}/secman/user/add'>
+  <div class='mb-3'>
+    <label for='login' class='form-label'>login</label>
+    <input type='text' class='form-control' id='login' name='login' value ='{{ login }}' aria-describedby='login'>
+  </div>
+  <div class='mb-3'>
+    <label for='password' class='form-label'>password</label>
+    <div class='row'>
+      <div class='col'>
+        <input type='password' class='form-control' autocomplete='off' name='pwd1string' placeholder='Password'>
+      </div>
+      <div class='col'>
+        <input
+          type='password'
+          class='form-control'
+          autocomplete='off'
+          name='pwd2string'
+          placeholder='Confirm password'
+        >
+      </div>
+    </div>
+  </div>
+  <div class='btn-group' role='group' aria-label='Basic example'>
+    <button type='submit' class='btn btn-primary'>Submit</button>
+    <a class='btn btn-primary' href='{{ DOCROOT }}/secman'>Back</a>
+  </div>
+  {% if error %}
+  <div class="alert alert-danger" role="alert">
+    {{ message }}
+  </div>
+  {% endif %} 
+</form>
+
+{% endblock %}

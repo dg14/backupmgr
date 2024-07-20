@@ -60,6 +60,8 @@ export class UserService implements OnModuleInit {
       this.checkPasswordComplexity(body.pwd1string)
     ) {
       u.password = this.cryptoService.genHash(body.pwd1string);
+    } else {
+      throw Error('Password error');
     }
     if (body.active && body.active == 'on') {
       u.active = true;

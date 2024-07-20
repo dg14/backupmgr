@@ -4,6 +4,7 @@
 <p>
   Database: <b>{{ db }}</b>
 </p>
+<h4>Users</h4>
 <table class='table'>
   <thead>
     <th scope='col'>UserName</th>
@@ -14,16 +15,17 @@
     <th scope='col'>Role</th>
     <th scope='col'>PermissionType</th>
     <th scope='col'>PermissionState</th>
-    <!--
-      <th scope='col'>ObjectType</th>
-      <th scope='col'>ObjectName</th>
-      <th scope='col'>ColumnName</th>
-    -->
   </thead>
   <tbody>
     {% for item in items %}
       <tr>
-        <td scope='row'>{{ item.UserName }}</td>
+        {% if item.PermissionType == 'CONNECT' %}
+          <td scope='row'>
+            <a href='{{ DOCROOT }}/secman/db/{{db}}/user/{{ item.UserName }}'>{{ item.UserName }}</a>
+          </td>
+        {% else %}
+          <td scope='row'>{{ item.UserName }}</td>
+        {% endif %}
         <td>{{ item.UserType }}</td>
         <td>{{ item.PrincipalUserName }}</td>
         <td>{{ item.PrincipalType }}</td>
@@ -31,18 +33,16 @@
         <td>{{ item.Role }}</td>
         <td>{{ item.PermissionType }}</td>
         <td>{{ item.PermissionState }}</td>
-        <!--
-          <td>{{ item.ObjectType }}</td>
-          <td>{{ item.ObjectName }}</td>
-          <td>{{ item.ColumnName }}</td>
-        -->
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <div class='btn-group' role='group' aria-label='Basic example'>
-  <a class='btn btn-primary' href='{{ DOCROOT }}/secexp'>Back</a>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman'>Back</a>
+</div>
+<div class='btn-group' role='group' aria-label='Basic example'>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ db }}/user/add'>Add user</a>
 </div>
 
 <hr>
@@ -87,5 +87,22 @@
     </li>
   -->
 </ul>
+<h4>Roles</h4>
+<table class='table'>
+  <thead>
+    <th scope='col'>Name</th>
+    <th scope='col'>RoleId</th>
+    <th scope='col'>IsAppRole</th>
+  </thead>
+  <tbody>
+    {% for role in roles %}
+      <tr>
+        <th scope='row'>{{ role.RoleName }}</th>
+        <td>{{ role.RoleId }}</td>
+        <td>{{ role.IsAppRole }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock %}

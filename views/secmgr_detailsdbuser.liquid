@@ -2,7 +2,10 @@
 {% block content %}
 <h3>Security details</h3>
 <p>
-  Database: <b>{{ db }}</b>
+  Database: <b>{{ database }}</b>
+</p>
+<p>
+  User: <b>{{ user }}</b>
 </p>
 <table class='table'>
   <thead>
@@ -14,14 +17,10 @@
     <th scope='col'>Role</th>
     <th scope='col'>PermissionType</th>
     <th scope='col'>PermissionState</th>
-    <!--
-      <th scope='col'>ObjectType</th>
-      <th scope='col'>ObjectName</th>
-      <th scope='col'>ColumnName</th>
-    -->
+    <th scope='col'>Actions</th>
   </thead>
   <tbody>
-    {% for item in items %}
+    {% for item in roles %}
       <tr>
         <td scope='row'>{{ item.UserName }}</td>
         <td>{{ item.UserType }}</td>
@@ -31,18 +30,21 @@
         <td>{{ item.Role }}</td>
         <td>{{ item.PermissionType }}</td>
         <td>{{ item.PermissionState }}</td>
-        <!--
-          <td>{{ item.ObjectType }}</td>
-          <td>{{ item.ObjectName }}</td>
-          <td>{{ item.ColumnName }}</td>
-        -->
+        <td>
+          {% if item.Role  %}
+            <a href='{{ DOCROOT }}/secman/db/{{ database }}/user/{{ user }}/role/{{ item.Role }}/droprole'>Drop role</a>
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
 <div class='btn-group' role='group' aria-label='Basic example'>
-  <a class='btn btn-primary' href='{{ DOCROOT }}/secexp'>Back</a>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ database }}'>Back</a>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ database }}/user/{{ user }}/addrole'>Add role</a>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/db/{{ database }}/user/{{ user }}/dropuser'>Drop user</a>
+
 </div>
 
 <hr>
