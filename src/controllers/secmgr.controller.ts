@@ -1,7 +1,9 @@
 import {
   Controller,
   Get,
+  Logger,
   Post,
+  Query,
   Render,
   Req,
   Res,
@@ -18,6 +20,7 @@ export class SecurityManagerController {
     private mssqlService: MssqlService,
     private readonly appService: AppService,
   ) {}
+  private readonly logger = new Logger(SecurityManagerController.name);
 
   @Get()
   @UseGuards(AuthGuard)
@@ -50,15 +53,20 @@ export class SecurityManagerController {
   @Get('user/add')
   @UseGuards(AuthGuard)
   @Render('secmgr_adduser')
-  async addUser(@Req() req: Request) {
+  async addUser(
+    @Req() req: Request,
+    @Query('error') error: boolean,
+    @Query('message') message: string,
+  ) {
     return {
+      message: message,
+      error: error ?? false,
       level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
     };
   }
   @Post('user/add')
   @UseGuards(AuthGuard)
-  @Render('secmgr_adduser')
   async addUserAction(@Req() req: Request, @Res() res: Response) {
     let error = false,
       message = '';
@@ -81,38 +89,72 @@ export class SecurityManagerController {
       } catch (e) {
         error = true;
         message = e.message;
+        this.logger.error(e.message, e.stack);
       }
     }
     if (!error) {
+      this.logger.log('Redirect to list addUser ok');
       res.redirect(this.appService.getDocRoot() + '/secman');
       res.end();
       return null;
     } else {
-      return {
-        login: req.body.login,
-        level: this.appService.getUserLevel(req),
-        DOCROOT: this.appService.getDocRoot(),
-        error: error,
-        message: message,
-      };
+      this.logger.log('Redirect to list addUser error');
+      res.redirect(
+        this.appService.getDocRoot() +
+          '/secman/user/add?message=' +
+          encodeURIComponent(message) +
+          '&=error=true',
+      );
+      res.end();
     }
   }
 
   @Get('user/:id')
   @UseGuards(AuthGuard)
   @Render('secmgr_detailsuser')
-  async detailsUser(@Req() req: Request) {
+  async detailsUser(
+    @Req() req: Request,
+    @Query('error') error: boolean,
+    @Query('message') message: string,
+  ) {
     return {
+      user: req.params.id,
+      roles: await this.mssqlService.getRolesForUser(req.params.id),
       level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
+      message: message,
+      error: error,
     };
+  }
+  @Get('user/:id/dropuser')
+  @UseGuards(AuthGuard)
+  async dropUser(@Req() req: Request, @Res() res: Response) {
+    let user = req.params.id;
+    let roles = await this.mssqlService.getRolesForUser(user);
+    if (roles.length == 0) {
+      await this.mssqlService.dropUser(user);
+      res.redirect(this.appService.getDocRoot() + '/secman/');
+    } else {
+      res.redirect(
+        this.appService.getDocRoot() +
+          '/secman/user/' +
+          user +
+          '?error=true&message=active_roles_for_user',
+      );
+    }
   }
 
   @Get('db/:db/user/add')
   @UseGuards(AuthGuard)
   @Render('secmgr_addusertodb')
-  async addUserToDb(@Req() req: Request) {
+  async addUserToDb(
+    @Req() req: Request,
+    @Query('error') error: boolean,
+    @Query('message') message: string,
+  ) {
     return {
+      message: message,
+      error: error,
       database: req.params['db'],
       users: this.mssqlService.getUsers(),
       level: this.appService.getUserLevel(req),
@@ -121,7 +163,6 @@ export class SecurityManagerController {
   }
   @Post('db/:db/user/add')
   @UseGuards(AuthGuard)
-  @Render('secmgr_addusertodb')
   async addUserToDbAction(@Req() req: Request, @Res() res: Response) {
     let error = false,
       message = '';
@@ -132,21 +173,24 @@ export class SecurityManagerController {
     } catch (e) {
       error = true;
       message = e.message;
+      this.logger.error(e.message, e.stack);
     }
     if (!error) {
       res.redirect(this.appService.getDocRoot() + '/secman/db/' + database);
       res.end();
+      this.logger.log('Redirect to list addUserToDB');
       return null;
-    } else
-      return {
-        error: error,
-        user: user,
-        message: message,
-        database: database,
-        users: this.mssqlService.getUsers(),
-        level: this.appService.getUserLevel(req),
-        DOCROOT: this.appService.getDocRoot(),
-      };
+    } else {
+      this.logger.log('Redirect to user addUserToDB ok');
+      res.redirect(
+        this.appService.getDocRoot() +
+          '/secman/db/' +
+          database +
+          '/useradd?error=true&message=' +
+          encodeURIComponent(message),
+      );
+      res.end();
+    }
   }
   @Get('db/:db/user/:user')
   @UseGuards(AuthGuard)
@@ -166,12 +210,18 @@ export class SecurityManagerController {
   @Get('db/:db/user/:user/addrole')
   @UseGuards(AuthGuard)
   @Render('secmgr_grantroletouser')
-  async grantRoleToUser(@Req() req: Request) {
+  async grantRoleToUser(
+    @Req() req: Request,
+    @Query('error') error: boolean,
+    @Query('message') message: string,
+  ) {
     let user = req.params['user'];
     let database = req.params['db'];
     return {
       user: user,
       database: database,
+      error: error ?? false,
+      message: message,
       roles: this.mssqlService.getDBRoles(database),
       level: this.appService.getUserLevel(req),
       DOCROOT: this.appService.getDocRoot(),
@@ -180,7 +230,6 @@ export class SecurityManagerController {
 
   @Post('db/:db/user/:user/addrole')
   @UseGuards(AuthGuard)
-  @Render('secmgr_grantroletouser')
   async grantRoleToUserAction(@Req() req: Request, @Res() res: Response) {
     console.log(req.body);
     let user = req.params['user'];
@@ -193,8 +242,10 @@ export class SecurityManagerController {
     } catch (e) {
       error = true;
       message = e.message;
+      this.logger.error(e.message, e.stack);
     }
     if (!error) {
+      this.logger.log('Redirect to user grantRoleToUser');
       res.redirect(
         this.appService.getDocRoot() +
           '/secman/db/' +
@@ -203,20 +254,21 @@ export class SecurityManagerController {
           user,
       );
       res.end();
-      return null;
-    } else
-      return {
-        user: user,
-        role: role,
-        error: error,
-        message: message,
-        database: database,
-        roles: this.mssqlService.getDBRoles(database),
-        level: this.appService.getUserLevel(req),
-        DOCROOT: this.appService.getDocRoot(),
-      };
-  }
+    } else {
+      this.logger.log('Redirect to user grantRoleToUser ok');
 
+      res.redirect(
+        this.appService.getDocRoot() +
+          '/secman/db/' +
+          database +
+          '/user/' +
+          user +
+          '/addrole?error=true&message=' +
+          encodeURIComponent(message),
+      );
+      res.end();
+    }
+  }
   @Get('db/:db/user/:user/role/:role/droprole')
   @UseGuards(AuthGuard)
   async dropRoleToUser(@Req() req: Request, @Res() res: Response) {
@@ -232,7 +284,7 @@ export class SecurityManagerController {
         '/user/' +
         req.params['user'],
     );
-    
+    this.logger.log('Redirect to user dropRoleToUser');
     return null;
   }
 
@@ -246,6 +298,7 @@ export class SecurityManagerController {
       this.appService.getDocRoot() + '/secman/db/' + req.params['db'],
     );
     res.end();
+    this.logger.log('Redirect to list dropUserFromDb');
     return null;
   }
 }

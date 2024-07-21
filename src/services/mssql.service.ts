@@ -246,24 +246,24 @@ ORDER BY
 
     return this.entityManager.query(query);
   }
-  getUsers() {
-    return this.entityManager.query(
+  async getUsers() {
+    return await this.entityManager.query(
       "select * from  sys.server_principals where type in('S','G')",
     );
   }
-  getRoles() {
+  async getRoles() {
     return this.entityManager.query(
       "select * from  sys.server_principals where type='R'",
     );
   }
-  getDBRoles(database: string) {
-    return this.entityManager.query(`use ${database}; exec sp_helprole`);
+  async getDBRoles(database: string) {
+    return await this.entityManager.query(`use ${database}; exec sp_helprole`);
   }
   async addUser(login: string, password: string) {
     let q = `use master; create login ${login} with password = '${password}';`;
     await this.entityManager.query(q);
   }
-  async dropUser(login: string, role: string, database: string) {
+  async dropUser(login: string) {
     await this.entityManager.query(`drop login ${login}`);
   }
   async addUserToDB(login: string, database: string) {
@@ -297,5 +297,18 @@ ORDER BY
     await this.entityManager.query(
       `use ${database}; revoke ${role} to ${login}`,
     );
+  }
+
+  async getRolesForUser(id: string) {
+    let dbs = await this.getDbs();
+    let ret = [];
+    for (let db of dbs) {
+      let roles = await this.getRolesForUserInDB(id, db.database_name);
+      for (let role of roles) {
+        role.Database = db.database_name;
+        ret.push(role);
+      }
+    }
+    return ret;
   }
 }

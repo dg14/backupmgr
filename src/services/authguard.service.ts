@@ -1,9 +1,14 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { AppService } from 'src/app.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private readonly appService: AppService) {}
-
+  private readonly logger = new Logger(AuthGuard.name);
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     if (request.session['logged'] == true) {
@@ -27,6 +32,7 @@ export class AuthGuard implements CanActivate {
       return grant ?? true;
     } else {
       const response = context.switchToHttp().getResponse();
+      this.logger.log("Redirect to login");
       response.redirect(302, this.appService.getDocRoot() + '/login');
       response.end();
       return false;

@@ -1,0 +1,78 @@
+{% layout 'default-layout.liquid' %}
+{% block content %}
+<h3>Security details</h3>
+<p>
+  User: <b>{{ user }}</b>
+</p>
+<table class='table'>
+  <thead>
+    <th scope='col'>Database</th>
+    <th scope='col'>UserType</th>
+    <th scope='col'>PrincipalUserName</th>
+    <th scope='col'>PrincipalType</th>
+    <th scope='col'>DatabaseUserName</th>
+    <th scope='col'>Role</th>
+    <th scope='col'>PermissionType</th>
+    <th scope='col'>PermissionState</th>
+    <th scope='col'>Actions</th>
+  </thead>
+  <tbody>
+    {% for item in roles %}
+      <tr>
+        <td scope='row'>{{ item.Database }}</td>
+        <td>{{ item.UserType }}</td>
+        <td>{{ item.PrincipalUserName }}</td>
+        <td>{{ item.PrincipalType }}</td>
+        <td>{{ item.DatabaseUserName }}</td>
+        <td>{{ item.Role }}</td>
+        <td>{{ item.PermissionType }}</td>
+        <td>{{ item.PermissionState }}</td>
+        <td>
+          {% if item.Role  %}
+            <a href='{{ DOCROOT }}/secman/db/{{ database }}/user/{{ user }}/role/{{ item.Role }}/droprole'>Drop role</a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class='btn-group' role='group' aria-label='Basic example'>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/'>Back</a>
+  <a class='btn btn-primary' href='{{ DOCROOT }}/secman/user/{{ user }}/dropuser'>Drop user</a>
+
+</div>
+{% if error %}
+    <div class='alert alert-danger' role='alert'>
+      {{ message }}
+    </div>
+  {% endif %}
+<hr>
+<ul>
+  <li><b>UserName</b>: SQL or Windows/Active Directory user account. This could also be an Active Directory group.</li>
+  <li>
+    <b>UserType</b>: Value will be either 'SQL User' or 'Windows User'. This reflects the type of user defined for the
+    SQL Server user account.
+  </li>
+  <li><b>PrincipalUserName</b>: if UserName is not blank, then UserName else DatabaseUserName</li>
+  <li><b>PrincipalType</b>: Possible values are 'SQL User', 'Windows User', 'Database Role', 'Windows Group'</li>
+  <li>
+    <b>DatabaseUserName</b>: Name of the associated user as defined in the database user account. The database user may
+    not be the same as the server user.
+  </li>
+  <li>
+    <b>Role</b>: The role name. This will be null if the associated permissions to the object are defined at directly on
+    the user account, otherwise this will be the name of the role that the user is a member of.
+  </li>
+  <li>
+    <b>PermissionType</b>: Type of permissions the user/role has on an object. Examples could include CONNECT, EXECUTE,
+    SELECT DELETE, INSERT, ALTER, CONTROL, TAKE OWNERSHIP, VIEW DEFINITION, etc. This value may not be populated for all
+    roles. Some built in roles have implicit permission definitions.
+  </li>
+  <li>
+    <b>PermissionState</b>: Reflects the state of the permission type, examples could include GRANT, DENY, etc.This
+    value may not be populated for all roles. Some built in roles have implicit permission definitions.
+  </li>
+</ul>
+
+{% endblock %}
